@@ -64,6 +64,24 @@ const Todo = ({ todo }: TodoProps) => {
       mutate(updatadTodos);
     }
   };
+  const toggleTodoCompletion = async (id: number, isCompleted: boolean) => {
+    const response = await fetch(`http://localhost:8080/editTodo/${todo.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        isCompleted: !isCompleted,
+      }),
+    });
+    if (response.ok) {
+      const editedTodo = await response.json();
+      const updatedTodos = todos.map((todo: TodoType) =>
+        todo.id === editedTodo.id ? editedTodo : todo,
+      );
+      mutate(updatedTodos);
+    }
+  };
   return (
     <div>
       <li className="py-4">
@@ -75,6 +93,8 @@ const Todo = ({ todo }: TodoProps) => {
               type="checkbox"
               className="h-4 w-4 text-teal-600 focus:ring-teal-500
                   border-gray-300 rounded"
+              onChange={() => toggleTodoCompletion(todo.id, todo.isCompleted)}
+              checked={todo.isCompleted}
             />
             <label className="ml-3 block text-gray-900">
               {isEditing ? (
@@ -85,7 +105,11 @@ const Todo = ({ todo }: TodoProps) => {
                   onChange={(e) => setEditedTitle(e.target.value)}
                 />
               ) : (
-                <span className="text-lg font-medium mr-2"> {todo.title} </span>
+                <span
+                  className={`text-lg font-medium mr-2 ${todo.isCompleted ? "line-through" : ""}`}
+                >
+                  {todo.title}
+                </span>
               )}
             </label>
           </div>
