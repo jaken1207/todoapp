@@ -10,13 +10,13 @@ async function fetcher(key: string) {
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR(
     "http://localhost:8080/allTodo",
     fetcher,
   );
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = fetch("http://localhost:8080/createTodo", {
+    const response = await fetch("http://localhost:8080/createTodo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,6 +26,11 @@ export default function Home() {
         isCompleted: false,
       }),
     });
+    if (response.ok) {
+      const newTodo = await response.json();
+      mutate([...data, newTodo]);
+      inputRef.current!.value = "";
+    }
   };
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-32 py-4 px-4">
