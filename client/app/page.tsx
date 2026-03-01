@@ -16,7 +16,16 @@ export default function Home() {
   );
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputRef.current) console.log(inputRef.current?.value);
+    const response = fetch("http://localhost:8080/createTodo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: inputRef.current?.value,
+        isCompleted: false,
+      }),
+    });
   };
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-32 py-4 px-4">
