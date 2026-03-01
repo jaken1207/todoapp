@@ -19,8 +19,12 @@ const Todo = ({ todo }: TodoProps) => {
     fetcher,
   );
   const handleEdit = async () => {
-    setIsEditing(!isEditing);
-    if (isEditing) {
+    if (!isEditing) {
+      // 編集モードに入る時は元のタイトルで初期化
+      setEditedTitle(todo.title);
+      setIsEditing(true);
+    } else {
+      // 編集モードを終了して保存
       const response = await fetch(
         `http://localhost:8080/editTodo/${todo.id}`,
         {
@@ -35,9 +39,8 @@ const Todo = ({ todo }: TodoProps) => {
         },
       );
       if (response.ok) {
-        const editedTodo = await response.json();
-        mutate([...data, editedTodo]);
-        setEditedTitle("");
+        mutate();
+        setIsEditing(false);
       }
     }
   };
