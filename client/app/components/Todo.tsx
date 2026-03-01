@@ -1,15 +1,45 @@
 import React from "react";
 import { TodoType } from "../types";
+import useSWR from "swr";
 
 type TodoProps = {
   todo: TodoType;
 };
 
+async function fetcher(key: string) {
+  return fetch(key).then((res) => res.json());
+}
+
 const Todo = ({ todo }: TodoProps) => {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const [editedTitle, setEditedTitle] = React.useState<string>(todo.title);
-  const handleEdit = () => {
+
+  const { data, isLoading, error, mutate } = useSWR(
+    "http://localhost:8080/allTodo",
+    fetcher,
+  );
+  const handleEdit = async () => {
     setIsEditing(!isEditing);
+    if (isEditing) {
+      const response = await fetch(
+        `http://localhost:8080/editTodo/${todo.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: editedTitle,
+            isCompleted: false,
+          }),
+        },
+      );
+      if (response.ok) {
+        const editedTodo = await response.json();
+        mutate([...data, editedTodo]);
+        setEditedTitle("");
+      }
+    }
   };
   return (
     <div>
