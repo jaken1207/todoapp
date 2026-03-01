@@ -1,6 +1,7 @@
 import React from "react";
 import { TodoType } from "../types";
 import { useTodos } from "../hooks/useTodos";
+import { API_URL } from "@/constants/url";
 
 type TodoProps = {
   todo: TodoType;
@@ -21,19 +22,16 @@ const Todo = ({ todo }: TodoProps) => {
       setIsEditing(true);
     } else {
       // 編集モードを終了して保存
-      const response = await fetch(
-        `http://localhost:8080/editTodo/${todo.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: editedTitle,
-            isCompleted: false,
-          }),
+      const response = await fetch(`${API_URL}/editTodo/${todo.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          title: editedTitle,
+          isCompleted: false,
+        }),
+      });
       if (response.ok) {
         const editedTodo = await response.json();
         const updatedTodos = todos.map((todo: TodoType) =>
@@ -47,15 +45,12 @@ const Todo = ({ todo }: TodoProps) => {
     }
   };
   const handleDelete = async (id: number) => {
-    const response = await fetch(
-      `http://localhost:8080/deleteTodo/${todo.id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const response = await fetch(`${API_URL}/deleteTodo/${todo.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
     if (response.ok) {
       const deletedTodo = await response.json();
       const updatadTodos = todos?.filter(
@@ -65,7 +60,7 @@ const Todo = ({ todo }: TodoProps) => {
     }
   };
   const toggleTodoCompletion = async (id: number, isCompleted: boolean) => {
-    const response = await fetch(`http://localhost:8080/editTodo/${todo.id}`, {
+    const response = await fetch(`${API_URL}/editTodo/${todo.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

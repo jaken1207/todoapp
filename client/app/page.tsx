@@ -1,4 +1,5 @@
 "use client";
+import { API_URL } from "@/constants/url";
 import Todo from "./components/Todo";
 import { useTodos } from "./hooks/useTodos";
 import { TodoType } from "./types";
@@ -10,7 +11,7 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8080/createTodo", {
+    const response = await fetch(`${API_URL}/createTodo`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
