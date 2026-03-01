@@ -35,7 +35,13 @@ const Todo = ({ todo }: TodoProps) => {
         },
       );
       if (response.ok) {
-        mutate();
+        const editedTodo = await response.json();
+        const updatedTodos = todos.map((todo: TodoType) =>
+          todo.id === editedTodo.id ? editedTodo : todo,
+        );
+        mutate(updatedTodos);
+        // mutate(); // 変更後のデータを再フェッチして最新の状態に更新
+        mutate(updatedTodos);
         setIsEditing(false);
       }
     }
