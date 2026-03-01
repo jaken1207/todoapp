@@ -40,6 +40,24 @@ const Todo = ({ todo }: TodoProps) => {
       }
     }
   };
+  const handleDelete = async (id: number) => {
+    const response = await fetch(
+      `http://localhost:8080/deleteTodo/${todo.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    if (response.ok) {
+      const deletedTodo = await response.json();
+      const updatadTodos = todos?.filter(
+        (t: TodoType) => t.id !== deletedTodo.id,
+      );
+      mutate(updatadTodos);
+    }
+  };
   return (
     <div>
       <li className="py-4">
@@ -72,7 +90,10 @@ const Todo = ({ todo }: TodoProps) => {
             >
               {isEditing ? "📄" : "✒"}
             </button>
-            <button className="bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-2 rounded">
+            <button
+              onClick={() => handleDelete(todo.id)}
+              className="bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-2 rounded"
+            >
               🗑️
             </button>
           </div>
