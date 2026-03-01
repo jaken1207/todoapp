@@ -1,11 +1,13 @@
 import express from "express";
 import type { Express, Request, Response } from "express";
 import { prisma } from "./lib/prisma";
+import cors from "cors";
 
 const app: Express = express();
 const PORT = 8080;
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/allTodo", async (req: Request, res: Response) => {
   const allTodos = await prisma.todo.findMany();
