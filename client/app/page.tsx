@@ -1,19 +1,13 @@
 "use client";
 import Todo from "./components/Todo";
-import useSWR from "swr";
+import { useTodos } from "./hooks/useTodos";
 import { TodoType } from "./types";
 import { useRef } from "react";
 
-async function fetcher(key: string) {
-  return fetch(key).then((res) => res.json());
-}
-
 export default function Home() {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { data, isLoading, error, mutate } = useSWR(
-    "http://localhost:8080/allTodo",
-    fetcher,
-  );
+  const { todos, isLoading, error, mutate } = useTodos();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await fetch("http://localhost:8080/createTodo", {
@@ -28,7 +22,7 @@ export default function Home() {
     });
     if (response.ok) {
       const newTodo = await response.json();
-      mutate([...data, newTodo]);
+      mutate([...todos, newTodo]);
       inputRef.current!.value = "";
     }
   };
@@ -61,7 +55,7 @@ export default function Home() {
         </div>
       </form>
       <ul className="divide-y divide-gray-200 px-4">
-        {data?.map((todo: TodoType) => (
+        {todos?.map((todo: TodoType) => (
           <Todo key={todo.id} todo={todo} />
         ))}
       </ul>

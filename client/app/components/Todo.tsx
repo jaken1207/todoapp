@@ -1,6 +1,6 @@
 import React from "react";
 import { TodoType } from "../types";
-import useSWR from "swr";
+import { useTodos } from "../hooks/useTodos";
 
 type TodoProps = {
   todo: TodoType;
@@ -13,11 +13,7 @@ async function fetcher(key: string) {
 const Todo = ({ todo }: TodoProps) => {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const [editedTitle, setEditedTitle] = React.useState<string>(todo.title);
-
-  const { data, isLoading, error, mutate } = useSWR(
-    "http://localhost:8080/allTodo",
-    fetcher,
-  );
+  const { todos, isLoading, error, mutate } = useTodos();
   const handleEdit = async () => {
     if (!isEditing) {
       // 編集モードに入る時は元のタイトルで初期化
