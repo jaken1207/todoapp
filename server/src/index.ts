@@ -6,13 +6,10 @@ const app: Express = express();
 const PORT = 8080;
 
 app.use(express.json());
-const allTodos = async () => {
-  const todos = await prisma.todo.findMany();
-  return todos;
-};
+
 app.get("/allTodo", async (req: Request, res: Response) => {
-  const todos = await allTodos();
-  return res.json(todos);
+  const allTodos = await prisma.todo.findMany();
+  return res.json(allTodos);
 });
 app.post("/createTodo", async (req: Request, res: Response) => {
   const { title, isCompleted } = req.body as {
