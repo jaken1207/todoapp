@@ -3,7 +3,6 @@ runtime: nodejs22
 build:
   commands:
     build: |
-      cd server
       npm ci
       npm run build
       npx prisma migrate deploy || npx prisma db push
