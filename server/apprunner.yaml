@@ -9,10 +9,11 @@ build:
 run:
   runtime-version: 22
   command: node dist/index.js
-  port: 8080
   env:
     - name: DATABASE_URL
       value: file:./dev.db
+    - name: PORT
+      value: "8080"
   network:
     ingress:
       is-publicly-accessible: true
