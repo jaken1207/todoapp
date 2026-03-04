@@ -11,14 +11,11 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "volta": {
-    "node": "22.21.1"
-  },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.3.3",
+    "@types/node": "^18.19.130",
     "express": "^5.2.1",
     "nodemon": "^3.1.14",
     "prisma": "^7.4.2",
