@@ -10,7 +10,6 @@ build:
       - npx prisma db push
 
 run:
-  runtime-version: 18
   command: node dist/index.js
   network:
     port: 8080
